@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "scheme": "acme",
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "name": "spotFake",
+    "slug": "spotFake",
+    "ios": {
+      "infoPlist": {}
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_BACKGROUND_LOCATION"
+      ]
+    }
+  }
+}

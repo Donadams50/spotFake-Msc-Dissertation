@@ -1,0 +1,7 @@
+numpy
+matplotlib
+opencv-python
+torch
+transformers
+scikit-learn
+imgaug

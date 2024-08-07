@@ -1,0 +1,31 @@
+# Ignore Python compiled files
+__pycache__/
+*.py[cod]
+*.so
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Ignore temporary and output files
+temp/
+processed/
+datasets/
+processed_data/
+# Ignore virtual environments
+env/
+venv/
+myenv/
+myenv
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore log files and databases
+*.log
+*.sqlite
+
+# Ignore configuration files
+*.config
+*.ini
+*.cfg
