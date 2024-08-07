@@ -2,11 +2,15 @@ import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from "./dashboard.style";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 
 
 const Dashboard = () => {
 const router = useRouter();
+const token =  AsyncStorage.getItem('token');
+  console.log("yes")
+ 
   const recentActivities = [
     { id: 1, fileName: 'AI_Video.MP4', icon: 'checkmark-circle' },
     { id: 2, fileName: 'Deepfake.MP4', icon: 'checkmark-circle' },

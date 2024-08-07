@@ -4,6 +4,7 @@ import { images } from '../../constants';
 import styles from "./sign-up.style";
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Signup = ({ ModalMessage }) => {
   const [name, setName] = useState('');
@@ -21,7 +22,7 @@ const Signup = ({ ModalMessage }) => {
   const handlSignUp = async () => {
     setIsLoading(true);
     // Validate form fields
-    if (!name || !phoneNumber || !email || !password || !confirmPassword) {
+    if (!name || !email || !password || !confirmPassword) {
       // Display error modal if any required fields are empty
       setIsLoading(false);
       setErrorMessage('Please fill in all required fields.');
@@ -36,8 +37,14 @@ const Signup = ({ ModalMessage }) => {
       return;
     }
     try {
+      console.log("here")
+      console.log(password)
+      console.log(email)
+      const firstName = name.split(' ').slice(0, -1).join(' ');
+      const lastName = name.split(' ').slice(-1).join(' ');
+     
       // Make API call to sign up
-      const response = await fetch('http://localhost:4000/user/register', {
+      const response = await fetch('http://192.168.0.150:5000/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,26 +52,33 @@ const Signup = ({ ModalMessage }) => {
         body: JSON.stringify({
           username : name,
           email,
-          password
+          password,
+          firstname:firstName || "Spf"  ,
+          lastname: lastName || "Spf"
         }),
       });
      
       const data = await response.json();
-      if (data.status == 200) {
-        console.log(response);
+      console.log(data);
+      if (data.status == 201) {
+
+        console.log(data);
         // Navigate to the dashboard upon successful registration
         setIsLoading(false);
-        router.push('/dashboard');
+        
+
+        router.push('/login');
       } else {
         setIsLoading(false);
         setErrorMessage(data.message);
         setErrorModalVisible(true);
       }
     } catch (error) {
+      console.log(error)
       setIsLoading(false);
       setErrorMessage("server error");
       setErrorModalVisible(true);
-      console.error('Error:', error);
+      // console.error('Error:', error);
     }
   };
 

@@ -4,6 +4,8 @@ import { images } from '../../constants';
 import styles from "./login.style";
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Login = ({ ModalMessage }) => {
   const [email, setEmail] = useState('');
@@ -17,7 +19,7 @@ const Login = ({ ModalMessage }) => {
 
   const handleLogin = async () => {
     setIsLoading(true);
-    router.push('/dashboard');
+    // router.push('/dashboard');
     // Validate form fields
     if (!email || !password) {
       // Display error modal if any required fields are empty
@@ -27,8 +29,9 @@ const Login = ({ ModalMessage }) => {
       return;
     }
     try {
+      
       // Make API call to sign up
-      const response = await fetch('http://137.184.159.197:5000/login', {
+      const response = await fetch('http://192.168.0.150:5000/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,8 +42,12 @@ const Login = ({ ModalMessage }) => {
         }),
       });
       const data = await response.json();
+      
       if (data.status == 200) {
-        console.log(response);
+        console.log(data.data.token)
+        console.log(data.data.profile.memberId)
+        await AsyncStorage.setItem('token', data.data.token);
+        await AsyncStorage.setItem('userId', data.data.profile.memberId);
         // Navigate to the dashboard upon successful registration
         setIsLoading(false);
         router.push('/dashboard');
