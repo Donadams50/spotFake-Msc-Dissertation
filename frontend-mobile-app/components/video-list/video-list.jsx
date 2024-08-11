@@ -1,25 +1,63 @@
-import React, { useState } from 'react';
-import { Text, View, ScrollView, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { Ionicons } from '@expo/vector-icons';
-import styles from "./video-list.style";
+import { useRouter } from 'expo-router';
+import styles from './video-list.style';
 
 const VideoList = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const recentActivities = [
-    { id: 1, fileName: 'AI_Video.MP4', icon: 'checkmark-circle' },
-    { id: 2, fileName: 'Deepfake.MP4', icon: 'checkmark-circle' },
-    { id: 3, fileName: 'AI_Video.MP4', icon: 'checkmark-circle' },
-    { id: 4, fileName: 'Deepfake.MP4', icon: 'checkmark-circle' },
-    { id: 5, fileName: 'AI_Video.MP4', icon: 'checkmark-circle' },
-    { id: 6, fileName: 'Deepfake.MP4', icon: 'checkmark-circle' },
-    { id: 7, fileName: 'AI_Video.MP4', icon: 'checkmark-circle' },
-    { id: 8, fileName: 'Deepfake.MP4', icon: 'checkmark-circle' },
-    { id: 9, fileName: 'AI_Video.MP4', icon: 'checkmark-circle' },
-    { id: 10, fileName: 'Deepfake.MP4', icon: 'checkmark-circle' },
-    { id: 11, fileName: 'AI_Video.MP4', icon: 'checkmark-circle' },
-    { id: 12, fileName: 'Deepfake.MP4', icon: 'checkmark-circle' }
-  ];
+  const [videosData, setVideosData] = useState([]);
 
+  const router = useRouter();
+
+
+  useEffect(() => {
+
+    getVideosData();
+
+}, []);
+
+const getVideosData = async () => {
+  try {
+    const token =  await AsyncStorage.getItem('token');
+    const userId =  await AsyncStorage.getItem('userId');
+
+    const response = await fetch(`http://192.168.0.150:5000/video/user/${userId}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+
+   // console.log( await response.json())
+    const data = await response.json();
+ 
+   console.log(data)
+
+    // Transform API data into the desired format
+    const transformedRecentVideos = data.data.map((video) => {
+      return {
+        id: video._id,
+        fileName: video.filename,
+        status: video.status,
+        icon: 'checkmark-circle',
+      };
+    });
+
+    setVideosData(transformedRecentVideos);
+    
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+  const handleVideoPress = async (videoDetails) => {
+    // Navigate to VideoAnalysis screen with video details
+    console.log(videoDetails.id)
+    await AsyncStorage.setItem('videoId', videoDetails.id);
+    router.push('/video-details');
+  };
 
   return (
     <View style={styles.container}>
@@ -37,12 +75,20 @@ const VideoList = () => {
       </View>
 
       <ScrollView>
-        {recentActivities.map((activity) => (
-          <View key={activity.id} style={styles.activityBox}>
+        {videosData.map((activity) => (
+          <TouchableOpacity
+            key={activity.id}
+            style={styles.activityBox}
+            onPress={() => handleVideoPress(activity)}
+          >
             <Ionicons name="videocam" size={24} color="gray" />
-            <Text style={styles.fileName}>{activity.fileName}</Text>
-            <Ionicons name={activity.icon} size={24} color="green" />
-          </View>
+            <View style={styles.fileDetailsContainer}>
+              {/* All text content should be wrapped in <Text> */}
+              <Text style={styles.fileName}>{activity.fileName}</Text>
+              <Text style={styles.statusText}>{activity.status}</Text> 
+            </View>
+            <Ionicons name={activity.icon} size={24} color={activity.status === 'Completed' ? 'green' : 'orange'} />
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>

@@ -24,7 +24,7 @@ const UploadVideo = () => {
   const [modalMessage, setModalMessage] = useState('');
   const router = useRouter();
 
-  const GOOGLE_API_KEY = process.env.googlekey;
+  const GOOGLE_API_KEY = ""
 
   const handleSelectMedia = async () => {
     try {
@@ -46,7 +46,7 @@ const UploadVideo = () => {
             name: name,
           });
 
-          const response = await axios.post('http://192.168.0.150:5000/video/upload-storage', formData, {
+          const response = await axios.post('http://192.168.0.150:5000/video/upload/storage', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -76,16 +76,11 @@ const UploadVideo = () => {
 
     const { url, frame_rate, duration, width, height, originalname } = videoDetails;
     const { longitude, latitude } = coordinates;
-
-    // console.log(url, frame_rate, duration, width, height, originalname, longitude, latitude, videoLocation);
-
     try {
       const userId = await AsyncStorage.getItem('userId');
       const token = await AsyncStorage.getItem('token');
-      // console.log(userId);
-      // console.log(token);
 
-      const response = await axios.post('http://192.168.0.150:5000/video', {
+      const response = await axios.post('http://192.168.0.150:5000/video/new', {
         url,
         frame_rate,
         duration,
@@ -95,20 +90,20 @@ const UploadVideo = () => {
         longitude,
         latitude,
         videoLocation,
+        userId
       }, {
         headers: {
           Authorization: token,
         },
       });
-      console.log("i don reach")
-      console.log(response)
+      
       if (response.status === 201) {
         await AsyncStorage.removeItem('videoDetails');
         setSuccessModalVisible(true);
         setModalMessage('Video successfully submitted!');
         setTimeout(() => {
           setSuccessModalVisible(false);
-          router.push('/video-history');
+          router.push('/video-list');
         }, 2000); // Delay for 2 seconds before navigating to the history page
       } else {
         console.log("fail")

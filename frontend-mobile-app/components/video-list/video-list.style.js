@@ -16,11 +16,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 30,
     paddingHorizontal: 10,
-    height: 50, // Make it the same height as the video items
+    height: 50,
   },
   input: {
     flex: 1,
-    height: 50, // Match the height of the container
+    height: 50,
     fontSize: 16,
     color: '#000',
     paddingHorizontal: 10,
@@ -36,11 +36,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 15,
   },
-  fileName: {
+  fileDetailsContainer: {
     flex: 1,
     marginLeft: 10,
+  },
+  fileName: {
     fontSize: 16,
     color: '#222222',
+  },
+  statusText: {
+    fontSize: 14,
+    color: 'gray',
   },
 });
 

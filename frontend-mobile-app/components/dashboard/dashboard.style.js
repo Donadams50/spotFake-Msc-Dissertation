@@ -72,11 +72,32 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
-  fileName: {
+
+  fileDetailsContainer: {
     flex: 1,
     marginLeft: 10,
-    fontSize: 16,
+  },
+  fileName: {
+    fontSize: 14,
     color: '#222222',
+  },
+  statusText: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  thumbnailContainer: {
+    position: 'relative',
+    marginRight: 10,
+  },
+  thumbnail: {
+    width: 80, // Adjust size as needed
+    height: 80, // Adjust size as needed
+    borderRadius: 5,
+  },
+  statusIcon: {
+    position: 'absolute',
+    bottom: 5,
+    right: 5,
   },
 });
 
